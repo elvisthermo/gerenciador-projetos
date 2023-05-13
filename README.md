@@ -54,14 +54,14 @@ Ao seguir esses passos, você poderá executar sua aplicação Spring Boot local
 
 
 ### Docker
- Crie um arquivo .env para o Docker na raiz do projeto com as seguintes variáveis: 
+ Crie um arquivo .env para o Docker na pasta ./docker do projeto com as seguintes variáveis: 
   
   ```env
      POSTGRES_USER=seu_user
      POSTGRES_PASSWORD=sua_senha
      POSTGRES_DB=nome_db
   ```
-Dentro da pasta docker localizada na raiz do projeto execute o seguinte comando:
+Dentro da pasta docker do projeto execute o seguinte comando:
 ```shell
   docker compose-up
 ```
