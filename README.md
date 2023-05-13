@@ -52,16 +52,8 @@ O projeto é desenvolvido em Java utilizando o framework Spring Boot, que fornec
 ### Banco de dados 
 Ao seguir esses passos, você poderá executar sua aplicação Spring Boot localmente, com o banco de dados PostgreSQL configurado. Certifique-se de ter todos os pré-requisitos instalados corretamente e o banco de dados PostgreSQL disponível, seja instalado localmente ou por meio do Docker, antes de iniciar o processo.
 
-
 ### Docker
- Crie um arquivo .env para o Docker na pasta ./docker do projeto com as seguintes variáveis: 
-  
-  ```env
-     POSTGRES_USER=seu_user
-     POSTGRES_PASSWORD=sua_senha
-     POSTGRES_DB=nome_db
-  ```
-Dentro da pasta docker do projeto execute o seguinte comando:
+Dentro na raiz do projeto execute o seguinte comando:
 ```shell
   docker compose-up
 ```
