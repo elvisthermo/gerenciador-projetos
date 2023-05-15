@@ -1,46 +1,70 @@
 package com.gerenciador.projetos.controller;
 
-import com.gerenciador.projetos.enums.ClassificacaoRisco;
 import com.gerenciador.projetos.model.Projeto;
-import com.gerenciador.projetos.enums.Status;
+import com.gerenciador.projetos.service.ProjetoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-@RestController
-@RequestMapping("/projetos")
+@Api(value = "Gerenciamento de Projetos", description = "Operações para gerenciar projetos")
+@Controller
+@RequestMapping("/api/projetos")
 public class ProjetosController {
 
-    @GetMapping
-    public List<Projeto> listarProjetos() {
-        Projeto projetoTeste = new Projeto();
-        projetoTeste.setId(1L);
-        projetoTeste.setNome("Projeto de Teste");
-        projetoTeste.setDataDeInicio(new Date());
-        projetoTeste.setGerenteResponsavel("Gerente de Teste");
-        projetoTeste.setPrevisaoDeTermino(new Date());
-        projetoTeste.setDataRealDeTermino(new Date());
-        projetoTeste.setOrcamentoTotal(10000);
-        projetoTeste.setDescricao("Este é um projeto de teste.");
-        projetoTeste.setStatus(Status.INICIADO);
-        projetoTeste.setClassificacao(ClassificacaoRisco.BAIXO_RISCO);
+    private final ProjetoService projetoService;
 
-        return Arrays.asList(projetoTeste);
+    @Autowired
+    public ProjetosController(ProjetoService projetoService) {
+        this.projetoService = projetoService;
     }
 
+    @ApiOperation(value = "Ver todos os projetos", response = List.class)
+    @GetMapping("/")
+    public ResponseEntity<List<Projeto>> getAllProjetos() {
+        return ResponseEntity.ok(projetoService.findAll());
+    }
+
+    @ApiOperation(value = "Buscar um projeto por ID", response = Projeto.class)
+    @GetMapping("/{id}")
+    public ResponseEntity<Projeto> getProjetoById(@PathVariable Long id) {
+        return projetoService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @ApiOperation(value = "Criar um novo projeto", response = Projeto.class)
     @PostMapping
-    public Projeto criarProjeto(){
-       return new Projeto();
-    }
-    @DeleteMapping
-    public void deletarProjeto(){
+    public ResponseEntity<Projeto> createProjeto(@RequestBody Projeto projeto) {
+        return new ResponseEntity<>(projetoService.save(projeto), HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public Projeto atualizarProjeto(){
-        return  new Projeto();
+    @ApiOperation(value = "Atualizar um projeto existente", response = Projeto.class)
+    @PutMapping("/{id}")
+    public ResponseEntity<Projeto> updateProjeto(@PathVariable Long id, @RequestBody Projeto projeto) {
+        return projetoService.findById(id)
+                .map(projetoObj -> {
+                    projeto.setId(id);
+                    return
+                            new ResponseEntity<>(projetoService.save(projeto), HttpStatus.OK);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @ApiOperation(value = "Deletar um projeto")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProjeto(@PathVariable Long id) {
+        return projetoService.findById(id)
+                .map(projeto -> {
+                    projetoService.deleteById(id);
+                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 
