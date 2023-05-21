@@ -57,3 +57,9 @@ Dentro na raiz do projeto execute o seguinte comando:
 ```shell
   docker compose-up
 ```
+
+### Documentação
+
+Para acessar a documentação swagger acesse:
+
+http://localhost:8080/swagger-ui/index.html
